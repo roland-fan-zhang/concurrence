@@ -1,7 +1,7 @@
 package fr.uge.concurrence.exchanger;
 
 public class ExchangerExample {
-    public static void main(String[] args) throws InterruptedException {
+    void main() throws InterruptedException {
         var exchanger = new Exchanger<String>();
         Thread.ofPlatform().start(() -> {
             try {
