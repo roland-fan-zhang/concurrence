@@ -19,7 +19,7 @@ public final class Exchanger<T> {
             var firstValue = depositedValue;
             depositedValue = value;
             isPresent = false;
-            lock.notify();
+            lock.notifyAll();
             return firstValue;
         }
     }
