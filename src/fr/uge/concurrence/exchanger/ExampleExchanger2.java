@@ -3,16 +3,16 @@ package fr.uge.concurrence.exchanger;
 import java.util.stream.IntStream;
 
 public class ExampleExchanger2 {
-    public static void main(String[] args) throws InterruptedException {
-        var exchanger = new Exchanger<String>();
-        IntStream.range(0, 10).forEach(i -> {
-            Thread.ofPlatform().start(() -> {
-                try {
-                    System.out.println("thread " + i + " received from " + exchanger.exchange("thread " + i));
-                } catch (InterruptedException e) {
-                    throw new AssertionError(e);
-                }
-            });
-        });
-    }
+  void main() {
+    var exchanger = new Exchanger<String>();
+    IntStream.range(0, 10).forEach(i -> {
+      Thread.ofPlatform().start(() -> {
+        try {
+          System.out.println("thread " + i + " received from " + exchanger.exchange("thread " + i));
+        }catch(InterruptedException e) {
+          throw new AssertionError(e);
+        }
+      });
+    });
+  }
 }

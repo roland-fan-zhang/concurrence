@@ -4,6 +4,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class TransfertReentrantLock {
+
   private final ReentrantLock lock = new ReentrantLock();
   private final Condition condition = lock.newCondition();
 
@@ -12,29 +13,29 @@ public class TransfertReentrantLock {
 
   public void put(int value) throws InterruptedException {
     lock.lock();
-    try{
-      while (hasValue){
+    try {
+      while (hasValue) {
         condition.await();
       }
       this.value = value;
       hasValue = true;
       condition.signalAll();
-    }finally {
+    } finally {
       lock.unlock();
     }
   }
 
   public int take() throws InterruptedException {
     lock.lock();
-    try{
-      while (!hasValue){
+    try {
+      while (!hasValue) {
         condition.await();
       }
       var result = value;
       hasValue = false;
       condition.signalAll();
       return result;
-    }finally {
+    } finally {
       lock.unlock();
     }
   }
