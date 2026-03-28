@@ -1,17 +1,18 @@
 package fr.uge.concurrence.exchanger;
 
 public final class Exchanger<T> {
+
   private final Object lock = new Object();
 
   private T depositedValue;
   private boolean isPresent;
 
   public T exchange(T value) throws InterruptedException {
-    synchronized(lock) {
-      if(!isPresent) {
+    synchronized (lock) {
+      if (!isPresent) {
         depositedValue = value;
         isPresent = true;
-        while(isPresent) {
+        while (isPresent) {
           lock.wait();
         }
         return depositedValue;
