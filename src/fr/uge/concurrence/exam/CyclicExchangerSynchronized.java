@@ -1,6 +1,6 @@
 package fr.uge.concurrence.exam;
 
-public class CyclicExchanger<T> {
+public class CyclicExchangerSynchronized<T> {
   private final Object lock = new Object();
 
   private final T[] values;
@@ -9,7 +9,7 @@ public class CyclicExchanger<T> {
   private boolean ready;
 
   @SuppressWarnings("unchecked")
-  public CyclicExchanger(int nbParticipants){
+  public CyclicExchangerSynchronized(int nbParticipants){
     this.nbParticipants = nbParticipants;
     this.values = (T[]) new Object[nbParticipants];
   }
@@ -34,7 +34,7 @@ public class CyclicExchanger<T> {
   }
 
   static void main() {
-    var exchanger = new CyclicExchanger<Integer>(5);
+    var exchanger = new CyclicExchangerSynchronized<Integer>(5);
 
     for (int i = 0; i < 5; i++) {
       final int threadIndex = i;
