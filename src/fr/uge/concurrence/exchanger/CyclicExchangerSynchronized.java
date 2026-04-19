@@ -1,11 +1,7 @@
-package fr.uge.concurrence.exam;
+package fr.uge.concurrence.exchanger;
 
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
-
-public class CyclicExchangerReentrantLock<T> {
-  private final ReentrantLock lock = new ReentrantLock();
-  private final Condition condition = lock.newCondition();
+public class CyclicExchangerSynchronized<T> {
+  private final Object lock = new Object();
 
   private final T[] values;
   private final int nbParticipants;
@@ -13,14 +9,13 @@ public class CyclicExchangerReentrantLock<T> {
   private boolean ready;
 
   @SuppressWarnings("unchecked")
-  public CyclicExchangerReentrantLock(int nbParticipants){
+  public CyclicExchangerSynchronized(int nbParticipants){
     this.nbParticipants = nbParticipants;
     this.values = (T[]) new Object[nbParticipants];
   }
 
   public T exchange(T value) throws InterruptedException {
-    lock.lock();
-    try {
+    synchronized (lock){
       if (ready) {
         throw new IllegalStateException();
       }
@@ -29,19 +24,17 @@ public class CyclicExchangerReentrantLock<T> {
       counter++;
       if(counter == nbParticipants){
         ready = true;
-        condition.signalAll();
+        lock.notifyAll();
       }
       while(!ready){
-        condition.await();
+        lock.wait();
       }
       return values[(index + 1) % nbParticipants];
-    }finally {
-      lock.unlock();
     }
   }
 
   static void main() {
-    var exchanger = new CyclicExchangerReentrantLock<Integer>(5);
+    var exchanger = new CyclicExchangerSynchronized<Integer>(5);
 
     for (int i = 0; i < 5; i++) {
       final int threadIndex = i;
